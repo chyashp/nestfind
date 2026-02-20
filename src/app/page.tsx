@@ -114,12 +114,24 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative pt-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-950/40 via-slate-950 to-slate-950" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-primary-600/10 blur-3xl" />
-        <div className="absolute top-20 right-0 h-[400px] w-[400px] rounded-full bg-accent-500/8 blur-3xl" />
+        {/* Real background image */}
+        <Image
+          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop&q=80"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+        />
+        {/* Overlays for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-950/90 via-slate-950/85 to-slate-950" />
+        <div className="absolute inset-0 bg-primary-950/40" />
+        {/* Decorative glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-primary-600/8 blur-3xl" />
+
         <div className="relative mx-auto max-w-7xl px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary-500/10 px-4 py-1.5 text-sm font-medium text-primary-400 ring-1 ring-primary-500/20">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-sm font-medium text-primary-400 ring-1 ring-white/10 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-primary-400" />
               Find your dream property today
             </div>
@@ -129,7 +141,7 @@ export default function HomePage() {
                 Perfect Home
               </span>
             </h1>
-            <p className="mt-6 text-xl leading-8 text-slate-400">
+            <p className="mt-6 text-xl leading-8 text-slate-300">
               Browse thousands of verified listings. Search by map, filter by
               your needs, and connect directly with property owners.
             </p>
@@ -146,13 +158,59 @@ export default function HomePage() {
                   <Link
                     key={city}
                     href={`/search?query=${encodeURIComponent(city)}`}
-                    className="rounded-full bg-white/5 px-4 py-1.5 text-sm text-slate-400 ring-1 ring-white/10 hover:ring-primary-500/40 hover:text-primary-400 hover:bg-primary-500/10 transition-all"
+                    className="rounded-full bg-white/5 px-4 py-1.5 text-sm text-slate-300 ring-1 ring-white/10 backdrop-blur-sm hover:ring-primary-500/40 hover:text-primary-400 hover:bg-primary-500/10 transition-all"
                   >
                     {city}
                   </Link>
                 )
               )}
             </div>
+          </div>
+
+          {/* Floating property preview cards */}
+          <div className="mt-14 flex justify-center gap-4 overflow-hidden">
+            {[
+              {
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=280&h=180&fit=crop&q=80",
+                price: "$425,000",
+                location: "Austin, TX",
+                beds: "3 bed",
+              },
+              {
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=280&h=180&fit=crop&q=80",
+                price: "$2,800/mo",
+                location: "San Francisco, CA",
+                beds: "2 bed",
+              },
+              {
+                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=280&h=180&fit=crop&q=80",
+                price: "$1,250,000",
+                location: "Miami, FL",
+                beds: "5 bed",
+              },
+            ].map((card) => (
+              <Link
+                key={card.location}
+                href="/search"
+                className="group hidden w-56 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 hover:border-primary-400/20 hover:bg-white/8 sm:block"
+              >
+                <div className="relative h-28 overflow-hidden">
+                  <Image
+                    src={card.image}
+                    alt={card.location}
+                    fill
+                    sizes="224px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-bold text-white">{card.price}</p>
+                  <p className="text-xs text-slate-400">
+                    {card.beds} &middot; {card.location}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
