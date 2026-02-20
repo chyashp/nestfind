@@ -74,10 +74,10 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary-400/10 bg-slate-900/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-emerald-500/10 bg-slate-900/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 shadow-lg shadow-primary-500/25">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 shadow-lg shadow-emerald-500/30">
               <BuildingOffice2Icon className="h-5 w-5 text-white" />
             </div>
             <span className="text-lg font-bold text-white">NestFind</span>
@@ -85,13 +85,13 @@ export default function HomePage() {
           <div className="hidden items-center gap-8 md:flex">
             <Link
               href="/search"
-              className="text-sm font-medium text-slate-400 hover:text-primary-400 transition-colors"
+              className="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors"
             >
               Search
             </Link>
             <Link
               href="/map"
-              className="text-sm font-medium text-slate-400 hover:text-primary-400 transition-colors"
+              className="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors"
             >
               Map
             </Link>
@@ -114,19 +114,19 @@ export default function HomePage() {
         {/* Overlays for readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950" />
         <div className="absolute inset-0 bg-slate-900/30" />
-        {/* Warm decorative glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-primary-600/8 blur-3xl" />
-        <div className="absolute top-20 right-0 h-[400px] w-[400px] rounded-full bg-accent-500/6 blur-3xl" />
+        {/* Vibrant decorative glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-emerald-500/15 blur-3xl" />
+        <div className="absolute top-20 right-0 h-[400px] w-[400px] rounded-full bg-teal-500/12 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary-500/10 px-4 py-1.5 text-sm font-medium text-primary-400 ring-1 ring-primary-500/20 backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary-400" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-4 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-400/30 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               Find your dream property today
             </div>
             <h1 className="text-5xl font-bold tracking-tight text-white sm:text-7xl">
               Discover Your{" "}
-              <span className="bg-linear-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-emerald-300 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
                 Perfect Home
               </span>
             </h1>
@@ -147,7 +147,7 @@ export default function HomePage() {
                   <Link
                     key={city}
                     href={`/search?query=${encodeURIComponent(city)}`}
-                    className="rounded-full bg-white/5 px-4 py-1.5 text-sm text-slate-300 ring-1 ring-white/10 backdrop-blur-sm hover:ring-primary-500/40 hover:text-primary-400 hover:bg-primary-500/10 transition-all"
+                    className="rounded-full bg-emerald-500/5 px-4 py-1.5 text-sm text-slate-300 ring-1 ring-emerald-500/15 backdrop-blur-sm hover:ring-emerald-400/40 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all"
                   >
                     {city}
                   </Link>
@@ -159,13 +159,18 @@ export default function HomePage() {
       </section>
 
       {/* Browse by Property Type — Photo tiles */}
-      <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-900 to-slate-950" />
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 h-[400px] w-[400px] rounded-full bg-emerald-600/8 blur-3xl" />
+        <div className="relative mx-auto max-w-6xl px-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
+            <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">
+              Explore listings
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
               Browse by Property Type
             </h2>
-            <p className="mt-3 text-lg text-slate-500">
+            <p className="mt-3 text-lg text-slate-400">
               What kind of place are you looking for?
             </p>
           </div>
@@ -185,7 +190,7 @@ export default function HomePage() {
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute inset-0 bg-primary-600/0 transition-colors duration-300 group-hover:bg-primary-600/15" />
+                <div className="absolute inset-0 bg-emerald-600/0 transition-colors duration-300 group-hover:bg-emerald-600/20" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="text-sm font-bold text-white">{pt.label}</p>
                   <p className="text-xs text-white/60">{pt.count} listings</p>
@@ -196,7 +201,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works — Cinematic section with blurred house background */}
+      {/* How It Works — Cinematic section */}
       <section className="relative py-28 overflow-hidden">
         {/* Background image */}
         <Image
@@ -210,7 +215,7 @@ export default function HomePage() {
         {/* Dark overlay + blur */}
         <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-sm" />
         {/* Decorative glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-primary-500/6 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-emerald-500/12 blur-3xl" />
 
         <div className="relative mx-auto max-w-5xl px-6">
           <div className="text-center">
@@ -226,15 +231,15 @@ export default function HomePage() {
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className="group relative rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md transition-all duration-300 hover:border-primary-400/20 hover:bg-white/8"
+                className="group relative rounded-2xl border border-emerald-500/10 bg-emerald-950/20 p-8 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/30 hover:bg-emerald-950/30"
               >
                 {/* Step number */}
-                <span className="text-5xl font-black text-primary-500/20">
+                <span className="text-5xl font-black text-emerald-500/25">
                   {step.number}
                 </span>
 
-                <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500/15 ring-1 ring-primary-400/20">
-                  <step.icon className="h-6 w-6 text-primary-400" />
+                <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 ring-1 ring-emerald-400/25">
+                  <step.icon className="h-6 w-6 text-emerald-400" />
                 </div>
 
                 <h3 className="mt-5 text-lg font-bold text-white">
@@ -259,15 +264,15 @@ export default function HomePage() {
       </section>
 
       {/* Trust signals */}
-      <section className="border-y border-primary-400/10 bg-slate-900/40 py-10">
+      <section className="border-y border-emerald-500/10 bg-emerald-950/20 py-10">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-6">
           {[
             { icon: MapPinIcon, text: "50+ cities covered" },
             { icon: BuildingOffice2Icon, text: "10,000+ active listings" },
             { icon: ChatBubbleLeftRightIcon, text: "Direct owner contact" },
           ].map((item) => (
-            <div key={item.text} className="flex items-center gap-2.5 text-sm text-slate-400">
-              <item.icon className="h-4.5 w-4.5 text-primary-400" />
+            <div key={item.text} className="flex items-center gap-2.5 text-sm text-slate-300">
+              <item.icon className="h-4.5 w-4.5 text-emerald-400" />
               <span>{item.text}</span>
             </div>
           ))}
@@ -284,8 +289,8 @@ export default function HomePage() {
           className="object-cover"
           priority={false}
         />
-        <div className="absolute inset-0 bg-linear-to-r from-slate-950/95 via-slate-900/90 to-slate-950/95" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-500/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-slate-950/95 via-emerald-950/85 to-slate-950/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/15 via-teal-500/5 to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Ready to find your next home?
@@ -296,13 +301,13 @@ export default function HomePage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/search"
-              className="rounded-full bg-primary-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-primary-500/20 hover:bg-primary-400 transition-colors"
+              className="rounded-full bg-emerald-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-colors"
             >
               Browse Properties
             </Link>
             <Link
               href="/signup"
-              className="rounded-full border-2 border-white/20 px-8 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors"
+              className="rounded-full border-2 border-emerald-400/30 px-8 py-3.5 text-base font-semibold text-emerald-100 hover:bg-emerald-500/10 hover:border-emerald-400/50 transition-colors"
             >
               List Your Property
             </Link>
@@ -311,11 +316,11 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-primary-400/10 bg-slate-900 py-12">
+      <footer className="border-t border-emerald-500/10 bg-slate-900 py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 shadow-md shadow-primary-500/20">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 shadow-md shadow-emerald-500/20">
                 <BuildingOffice2Icon className="h-4 w-4 text-white" />
               </div>
               <span className="text-base font-bold text-white">
@@ -323,13 +328,13 @@ export default function HomePage() {
               </span>
             </div>
             <div className="flex items-center gap-6 text-sm text-slate-400">
-              <Link href="/search" className="hover:text-primary-400 transition-colors">
+              <Link href="/search" className="hover:text-emerald-400 transition-colors">
                 Search
               </Link>
-              <Link href="/map" className="hover:text-primary-400 transition-colors">
+              <Link href="/map" className="hover:text-emerald-400 transition-colors">
                 Map
               </Link>
-              <Link href="/login" className="hover:text-primary-400 transition-colors">
+              <Link href="/login" className="hover:text-emerald-400 transition-colors">
                 Sign In
               </Link>
             </div>

@@ -73,7 +73,7 @@ export default function OwnerEnquiriesPage() {
                 key={enquiry.id}
                 className={`rounded-2xl border bg-[var(--card-bg)] p-5 transition-colors ${
                   enquiry.status === "unread"
-                    ? "border-primary-200 bg-primary-50/30"
+                    ? "border-primary-200 bg-primary-50/30 [data-theme=dark]_&:border-primary-800 [data-theme=dark]_&:bg-primary-950/40"
                     : "border-[var(--card-border)]"
                 }`}
               >
@@ -117,7 +117,7 @@ export default function OwnerEnquiriesPage() {
                     {enquiry.status === "unread" && (
                       <button
                         onClick={() => updateStatus(enquiry.id, "read")}
-                        className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-600 border border-[var(--card-border)] hover:bg-slate-50 transition-colors"
+                        className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-600 border border-[var(--card-border)] hover:bg-slate-50 [data-theme=dark]_&:text-slate-300 [data-theme=dark]_&:hover:bg-slate-800 transition-colors"
                       >
                         Mark Read
                       </button>

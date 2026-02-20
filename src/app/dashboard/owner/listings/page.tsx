@@ -89,7 +89,7 @@ export default function OwnerListingsPage() {
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
                 filter === f
                   ? "bg-primary-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200 [data-theme=dark]_&:bg-slate-800 [data-theme=dark]_&:text-slate-300 [data-theme=dark]_&:hover:bg-slate-700"
               }`}
             >
               {f === "all" ? "All" : statusLabels[f as PropertyStatus]}
@@ -130,7 +130,7 @@ export default function OwnerListingsPage() {
                 key={property.id}
                 className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] overflow-hidden transition-shadow hover:shadow-md"
               >
-                <div className="relative aspect-[4/3] bg-slate-100">
+                <div className="relative aspect-[4/3] bg-slate-100 [data-theme=dark]_&:bg-slate-800">
                   {property.images?.[0] ? (
                     <Image
                       src={property.images[0]}
@@ -162,14 +162,14 @@ export default function OwnerListingsPage() {
                   <div className="mt-3 flex gap-2">
                     <Link
                       href={`/dashboard/owner/listings/${property.id}/edit`}
-                      className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[var(--card-border)] py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[var(--card-border)] py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 [data-theme=dark]_&:text-slate-300 [data-theme=dark]_&:hover:bg-slate-800 transition-colors"
                     >
                       <PencilSquareIcon className="h-4 w-4" />
                       Edit
                     </Link>
                     <button
                       onClick={() => handleDelete(property.id)}
-                      className="flex items-center justify-center rounded-xl border border-error-200 px-3 py-2 text-sm text-error-600 hover:bg-error-50 transition-colors"
+                      className="flex items-center justify-center rounded-xl border border-error-200 px-3 py-2 text-sm text-error-600 hover:bg-error-50 [data-theme=dark]_&:border-error-800 [data-theme=dark]_&:hover:bg-error-950 transition-colors"
                     >
                       <TrashIcon className="h-4 w-4" />
                     </button>
