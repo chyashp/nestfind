@@ -1,6 +1,63 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+// Real Unsplash photos grouped by property type
+const HOUSE_IMAGES = [
+  ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600573472591-ee6981cf81d6?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600607687126-8a3414349a51?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=800&h=600&fit=crop&q=80"],
+];
+
+const CONDO_IMAGES = [
+  ["https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560185008-b033106af5c8?w=800&h=600&fit=crop&q=80"],
+];
+
+const APARTMENT_IMAGES = [
+  ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1560185008-b033106af5c8?w=800&h=600&fit=crop&q=80"],
+];
+
+const TOWNHOUSE_IMAGES = [
+  ["https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=800&h=600&fit=crop&q=80"],
+];
+
+const COMMERCIAL_IMAGES = [
+  ["https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=600&fit=crop&q=80"],
+];
+
+function getImages(propertyType: string, index: number): string[] {
+  switch (propertyType) {
+    case "house": return HOUSE_IMAGES[index % HOUSE_IMAGES.length];
+    case "condo": return CONDO_IMAGES[index % CONDO_IMAGES.length];
+    case "apartment": return APARTMENT_IMAGES[index % APARTMENT_IMAGES.length];
+    case "townhouse": return TOWNHOUSE_IMAGES[index % TOWNHOUSE_IMAGES.length];
+    case "commercial": return COMMERCIAL_IMAGES[index % COMMERCIAL_IMAGES.length];
+    default: return HOUSE_IMAGES[index % HOUSE_IMAGES.length];
+  }
+}
+
+// Per-type counters for image rotation
+const typeCounters: Record<string, number> = {};
+function getNextImages(propertyType: string): string[] {
+  if (!(propertyType in typeCounters)) typeCounters[propertyType] = 0;
+  const images = getImages(propertyType, typeCounters[propertyType]);
+  typeCounters[propertyType]++;
+  return images;
+}
+
 const OTTAWA_PROPERTIES = [
   // ── The Glebe ──
   {
@@ -413,6 +470,9 @@ export async function POST() {
     );
   }
 
+  // Reset counters for each seed run
+  for (const key of Object.keys(typeCounters)) delete typeCounters[key];
+
   const rows = OTTAWA_PROPERTIES.map((p) => ({
     owner_id: user.id,
     title: p.title,
@@ -435,7 +495,7 @@ export async function POST() {
     year_built: p.year_built,
     parking_spaces: p.parking_spaces,
     amenities: p.amenities,
-    images: [],
+    images: getNextImages(p.property_type),
   }));
 
   const { data, error } = await supabase
