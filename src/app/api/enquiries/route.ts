@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { sendEnquiryEmail } from "@/lib/resend";
 
 // GET /api/enquiries — Get enquiries (owner: for their properties, buyer: their sent)
 export async function GET() {
@@ -77,10 +79,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Get property owner
+  // Get property + owner info
   const { data: property } = await supabase
     .from("properties")
-    .select("owner_id")
+    .select("owner_id, title, owner:profiles!properties_owner_id_fkey(full_name, user_id)")
     .eq("id", body.property_id)
     .single();
 
@@ -94,6 +96,13 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+
+  // Get sender profile
+  const { data: senderProfile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("user_id", user.id)
+    .single();
 
   const { data, error } = await supabase
     .from("enquiries")
@@ -110,6 +119,33 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // Send email notification to owner (best-effort, non-blocking)
+  try {
+    const admin = createAdminClient();
+    if (admin) {
+      const { data: ownerAuth } = await admin.auth.admin.getUserById(property.owner_id);
+      const ownerEmail = ownerAuth?.user?.email;
+      const ownerArr = property.owner as unknown as { full_name: string }[] | null;
+      const ownerProfile = ownerArr?.[0] ?? null;
+
+      if (ownerEmail) {
+        await sendEnquiryEmail({
+          ownerName: ownerProfile?.full_name || "Property Owner",
+          ownerEmail,
+          senderName: senderProfile?.full_name || "A buyer",
+          senderPhone: body.phone || null,
+          preferredDate: body.preferred_date || null,
+          message: body.message,
+          propertyTitle: property.title,
+          propertyId: body.property_id,
+        });
+      }
+    }
+  } catch {
+    // Email is best-effort — don't fail the enquiry if email fails
+    console.error("Failed to send enquiry email notification");
   }
 
   return NextResponse.json({ data }, { status: 201 });
