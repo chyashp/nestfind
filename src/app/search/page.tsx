@@ -526,6 +526,7 @@ function SearchPageInner() {
             onToggleSave={handleToggleSave}
             isLoading={isLoading}
             emptyMessage="No properties found. Try adjusting your filters."
+            viewMode={viewMode}
           />
 
           {/* -------- Pagination -------- */}
