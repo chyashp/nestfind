@@ -4,73 +4,89 @@ import {
   MagnifyingGlassIcon,
   MapPinIcon,
   HomeModernIcon,
-  ShieldCheckIcon,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import LocationSearchBar from "@/components/shared/LocationSearchBar";
 
-const features = [
+const propertyTypes = [
   {
-    icon: MagnifyingGlassIcon,
-    title: "Smart Search",
-    description:
-      "Filter by price, bedrooms, property type, amenities and more to find exactly what you need.",
-    gradient: "from-indigo-500/20 to-violet-500/20",
-    iconColor: "text-indigo-400",
-    span: "lg:col-span-2",
+    type: "house",
+    label: "Houses",
+    emoji: "🏠",
+    gradient: "from-amber-500/15 to-orange-500/15",
+    border: "hover:border-amber-500/30",
+    count: "2,400+",
   },
   {
-    icon: MapPinIcon,
-    title: "Map Search",
-    description:
-      "Explore properties on an interactive map. Discover listings in any neighborhood.",
-    gradient: "from-violet-500/20 to-fuchsia-500/20",
-    iconColor: "text-violet-400",
-    span: "",
+    type: "apartment",
+    label: "Apartments",
+    emoji: "🏢",
+    gradient: "from-blue-500/15 to-cyan-500/15",
+    border: "hover:border-blue-500/30",
+    count: "3,800+",
   },
   {
-    icon: HomeModernIcon,
-    title: "Detailed Listings",
-    description:
-      "High-quality photos, amenity details, and comprehensive property information.",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    iconColor: "text-cyan-400",
-    span: "",
+    type: "condo",
+    label: "Condos",
+    emoji: "🏙️",
+    gradient: "from-violet-500/15 to-purple-500/15",
+    border: "hover:border-violet-500/30",
+    count: "1,600+",
   },
   {
-    icon: ShieldCheckIcon,
-    title: "Verified Owners",
-    description:
-      "Every listing is posted by verified property owners and agents you can trust.",
-    gradient: "from-emerald-500/20 to-teal-500/20",
-    iconColor: "text-emerald-400",
-    span: "",
+    type: "townhouse",
+    label: "Townhouses",
+    emoji: "🏘️",
+    gradient: "from-emerald-500/15 to-teal-500/15",
+    border: "hover:border-emerald-500/30",
+    count: "900+",
   },
   {
-    icon: ChatBubbleLeftRightIcon,
-    title: "Direct Enquiries",
-    description:
-      "Contact property owners directly. No middlemen, no delays.",
-    gradient: "from-amber-500/20 to-orange-500/20",
-    iconColor: "text-amber-400",
-    span: "",
+    type: "land",
+    label: "Land",
+    emoji: "🌳",
+    gradient: "from-lime-500/15 to-green-500/15",
+    border: "hover:border-lime-500/30",
+    count: "500+",
   },
   {
-    icon: BuildingOffice2Icon,
-    title: "List Your Property",
-    description:
-      "Create stunning listings with photos and details. Reach thousands of buyers and tenants.",
-    gradient: "from-rose-500/20 to-pink-500/20",
-    iconColor: "text-rose-400",
-    span: "lg:col-span-2",
+    type: "commercial",
+    label: "Commercial",
+    emoji: "🏬",
+    gradient: "from-rose-500/15 to-pink-500/15",
+    border: "hover:border-rose-500/30",
+    count: "700+",
   },
 ];
 
-const stats = [
-  { value: "10K+", label: "Active Listings" },
-  { value: "5K+", label: "Happy Buyers" },
-  { value: "2K+", label: "Verified Owners" },
-  { value: "50+", label: "Cities Covered" },
+const steps = [
+  {
+    number: "01",
+    title: "Search & Discover",
+    description: "Use smart filters, interactive maps, and neighborhood search to find properties that match your lifestyle.",
+    icon: MagnifyingGlassIcon,
+    color: "text-indigo-400",
+    bg: "bg-indigo-500/10",
+    ring: "ring-indigo-500/20",
+  },
+  {
+    number: "02",
+    title: "Connect with Owners",
+    description: "Send enquiries directly to verified property owners and agents. No middlemen, no delays.",
+    icon: ChatBubbleLeftRightIcon,
+    color: "text-violet-400",
+    bg: "bg-violet-500/10",
+    ring: "ring-violet-500/20",
+  },
+  {
+    number: "03",
+    title: "Move Into Your Nest",
+    description: "Schedule viewings, finalize details, and settle into your new home with confidence.",
+    icon: HomeModernIcon,
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    ring: "ring-emerald-500/20",
+  },
 ];
 
 export default function HomePage() {
@@ -161,55 +177,87 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y border-primary-400/10 bg-primary-950/30 py-12">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 sm:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-3xl font-bold text-primary-400 sm:text-4xl">
-                {stat.value}
-              </p>
-              <p className="mt-1 text-sm text-slate-500">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-24">
+      {/* Browse by Property Type */}
+      <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Everything you need to find{" "}
-              <span className="bg-linear-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">the one</span>
+              Browse by Property Type
             </h2>
-            <p className="mt-4 text-lg text-slate-500">
-              Powerful search, interactive maps, and direct communication — all
-              in one platform.
+            <p className="mt-3 text-lg text-slate-500">
+              What kind of place are you looking for?
             </p>
           </div>
 
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className={`group relative overflow-hidden rounded-2xl border border-white/6 bg-linear-to-br ${feature.gradient} p-7 transition-all duration-300 hover:border-white/15 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30 ${feature.span}`}
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            {propertyTypes.map((pt) => (
+              <Link
+                key={pt.type}
+                href={`/search?propertyType=${pt.type}`}
+                className={`group relative overflow-hidden rounded-2xl border border-white/8 bg-linear-to-br ${pt.gradient} p-5 text-center transition-all duration-300 ${pt.border} hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20`}
               >
-                <div className="absolute inset-0 bg-slate-950/40" />
-                <div className="relative">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-white/6 ${feature.iconColor} backdrop-blur-sm ring-1 ring-white/8 transition-all duration-300 group-hover:scale-110 group-hover:bg-white/10`}>
-                    <feature.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                    {feature.description}
-                  </p>
+                <div className="text-3xl">{pt.emoji}</div>
+                <p className="mt-2 text-sm font-semibold text-white">{pt.label}</p>
+                <p className="mt-0.5 text-xs text-slate-500">{pt.count} listings</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="relative py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-primary-950/40" />
+        <div className="relative mx-auto max-w-5xl px-6">
+          <div className="text-center">
+            <p className="text-sm font-semibold uppercase tracking-widest text-primary-400">
+              Simple process
+            </p>
+            <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+              How NestFind Works
+            </h2>
+          </div>
+
+          <div className="mt-16 grid gap-8 md:grid-cols-3">
+            {steps.map((step, i) => (
+              <div key={step.number} className="relative text-center">
+                {/* Connector line between steps (desktop) */}
+                {i < steps.length - 1 && (
+                  <div className="absolute top-10 left-[calc(50%+40px)] right-[calc(-50%+40px)] hidden h-px bg-linear-to-r from-white/10 to-white/5 md:block" />
+                )}
+
+                <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-3xl ${step.bg} ring-1 ${step.ring}`}>
+                  <step.icon className={`h-8 w-8 ${step.color}`} />
                 </div>
+
+                <p className={`mt-5 text-xs font-bold uppercase tracking-widest ${step.color}`}>
+                  Step {step.number}
+                </p>
+                <h3 className="mt-2 text-xl font-bold text-white">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  {step.description}
+                </p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Trust signals */}
+      <section className="border-y border-primary-400/10 bg-primary-950/30 py-10">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-6">
+          {[
+            { icon: MapPinIcon, text: "50+ cities covered" },
+            { icon: BuildingOffice2Icon, text: "10,000+ active listings" },
+            { icon: ChatBubbleLeftRightIcon, text: "Direct owner contact" },
+          ].map((item) => (
+            <div key={item.text} className="flex items-center gap-2.5 text-sm text-slate-400">
+              <item.icon className="h-4.5 w-4.5 text-primary-400" />
+              <span>{item.text}</span>
+            </div>
+          ))}
         </div>
       </section>
 
