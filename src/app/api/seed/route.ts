@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { generateNAProperties, type PropertySeed } from "./na-properties";
 
 // Real Unsplash photos grouped by property type
 const HOUSE_IMAGES = [
@@ -39,6 +40,11 @@ const COMMERCIAL_IMAGES = [
   ["https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=600&fit=crop&q=80"],
 ];
 
+const LAND_IMAGES = [
+  ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1595880723089-05c28e52b56a?w=800&h=600&fit=crop&q=80"],
+  ["https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&h=600&fit=crop&q=80", "https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=800&h=600&fit=crop&q=80"],
+];
+
 function getImages(propertyType: string, index: number): string[] {
   switch (propertyType) {
     case "house": return HOUSE_IMAGES[index % HOUSE_IMAGES.length];
@@ -46,6 +52,7 @@ function getImages(propertyType: string, index: number): string[] {
     case "apartment": return APARTMENT_IMAGES[index % APARTMENT_IMAGES.length];
     case "townhouse": return TOWNHOUSE_IMAGES[index % TOWNHOUSE_IMAGES.length];
     case "commercial": return COMMERCIAL_IMAGES[index % COMMERCIAL_IMAGES.length];
+    case "land": return LAND_IMAGES[index % LAND_IMAGES.length];
     default: return HOUSE_IMAGES[index % HOUSE_IMAGES.length];
   }
 }
@@ -506,7 +513,7 @@ export async function POST() {
   const myProperties = OTTAWA_PROPERTIES.slice(0, MY_LISTINGS_COUNT);
   const otherProperties = OTTAWA_PROPERTIES.slice(MY_LISTINGS_COUNT);
 
-  const buildRow = (p: (typeof OTTAWA_PROPERTIES)[0], ownerId: string) => ({
+  const buildRow = (p: (typeof OTTAWA_PROPERTIES)[0] | PropertySeed, ownerId: string) => ({
     owner_id: ownerId,
     title: p.title,
     description: p.description,
@@ -564,8 +571,31 @@ export async function POST() {
     otherCount = fallbackData?.length ?? 0;
   }
 
+  // ── Seed 500 North American properties ──
+  const naProperties = generateNAProperties();
+  let naCount = 0;
+  const BATCH_SIZE = 100;
+
+  // Insert NA properties in batches (all under demo owner, or fallback to current user)
+  const naOwnerId = demoOwnerId ?? user.id;
+  const naClient = admin && demoOwnerId ? admin : supabase;
+
+  for (let i = 0; i < naProperties.length; i += BATCH_SIZE) {
+    const batch = naProperties.slice(i, i + BATCH_SIZE);
+    const rows = batch.map((p) => buildRow(p, naOwnerId));
+    const { data: batchData, error: batchError } = await naClient
+      .from("properties")
+      .insert(rows)
+      .select("id");
+
+    if (!batchError && batchData) {
+      naCount += batchData.length;
+    }
+  }
+
+  const ottawaCount = (myData?.length ?? 0) + otherCount;
   return NextResponse.json({
-    message: `Seeded ${(myData?.length ?? 0) + otherCount} properties in Ottawa (${myData?.length ?? 0} yours, ${otherCount} from other owners)`,
+    message: `Seeded ${ottawaCount + naCount} properties total — ${ottawaCount} in Ottawa (${myData?.length ?? 0} yours, ${otherCount} from other owners) + ${naCount} across North America`,
     data: myData,
   });
 }
