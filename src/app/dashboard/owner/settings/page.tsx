@@ -11,8 +11,8 @@ import { updateName, updateAvatar } from "@/store/slices/auth";
 
 interface ProfileData {
   full_name: string;
-  phone: string;
-  bio: string;
+  phone: string | null;
+  bio: string | null;
   avatar_url: string | null;
   email: string;
 }
@@ -50,8 +50,8 @@ export default function OwnerSettingsPage() {
     try {
       await api.patch("/api/users/me", {
         full_name: profile.full_name,
-        phone: profile.phone,
-        bio: profile.bio,
+        phone: profile.phone || "",
+        bio: profile.bio || "",
       });
       dispatch(updateName(profile.full_name));
       setSaved(true);
@@ -132,7 +132,7 @@ export default function OwnerSettingsPage() {
           <Input
             id="settings-phone"
             label="Phone"
-            value={profile.phone}
+            value={profile.phone ?? ""}
             onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
             placeholder="+1 (555) 000-0000"
           />
@@ -144,7 +144,7 @@ export default function OwnerSettingsPage() {
             <textarea
               id="settings-bio"
               rows={4}
-              value={profile.bio}
+              value={profile.bio ?? ""}
               onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
               className="block w-full rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
               placeholder="Tell buyers a bit about yourself..."

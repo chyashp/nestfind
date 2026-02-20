@@ -11,8 +11,8 @@ import { updateName, updateAvatar } from "@/store/slices/auth";
 
 interface ProfileData {
   full_name: string;
-  phone: string;
-  bio: string;
+  phone: string | null;
+  bio: string | null;
   avatar_url: string | null;
   email: string;
 }
@@ -50,8 +50,8 @@ export default function BuyerSettingsPage() {
     try {
       await api.patch("/api/users/me", {
         full_name: profile.full_name,
-        phone: profile.phone,
-        bio: profile.bio,
+        phone: profile.phone || "",
+        bio: profile.bio || "",
       });
       dispatch(updateName(profile.full_name));
       setSaved(true);
@@ -126,7 +126,7 @@ export default function BuyerSettingsPage() {
           <Input
             id="settings-phone"
             label="Phone"
-            value={profile.phone}
+            value={profile.phone ?? ""}
             onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
             placeholder="+1 (555) 000-0000"
           />
