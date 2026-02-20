@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   BuildingOffice2Icon,
   MagnifyingGlassIcon,
@@ -12,49 +13,37 @@ const propertyTypes = [
   {
     type: "house",
     label: "Houses",
-    emoji: "🏠",
-    gradient: "from-amber-500/15 to-orange-500/15",
-    border: "hover:border-amber-500/30",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=520&fit=crop&q=80",
     count: "2,400+",
   },
   {
     type: "apartment",
     label: "Apartments",
-    emoji: "🏢",
-    gradient: "from-blue-500/15 to-cyan-500/15",
-    border: "hover:border-blue-500/30",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=520&fit=crop&q=80",
     count: "3,800+",
   },
   {
     type: "condo",
     label: "Condos",
-    emoji: "🏙️",
-    gradient: "from-violet-500/15 to-purple-500/15",
-    border: "hover:border-violet-500/30",
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=520&fit=crop&q=80",
     count: "1,600+",
   },
   {
     type: "townhouse",
     label: "Townhouses",
-    emoji: "🏘️",
-    gradient: "from-emerald-500/15 to-teal-500/15",
-    border: "hover:border-emerald-500/30",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=520&fit=crop&q=80",
     count: "900+",
   },
   {
     type: "land",
     label: "Land",
-    emoji: "🌳",
-    gradient: "from-lime-500/15 to-green-500/15",
-    border: "hover:border-lime-500/30",
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=520&fit=crop&q=80",
     count: "500+",
   },
   {
     type: "commercial",
     label: "Commercial",
-    emoji: "🏬",
-    gradient: "from-rose-500/15 to-pink-500/15",
-    border: "hover:border-rose-500/30",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=520&fit=crop&q=80",
     count: "700+",
   },
 ];
@@ -65,27 +54,18 @@ const steps = [
     title: "Search & Discover",
     description: "Use smart filters, interactive maps, and neighborhood search to find properties that match your lifestyle.",
     icon: MagnifyingGlassIcon,
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10",
-    ring: "ring-indigo-500/20",
   },
   {
     number: "02",
     title: "Connect with Owners",
     description: "Send enquiries directly to verified property owners and agents. No middlemen, no delays.",
     icon: ChatBubbleLeftRightIcon,
-    color: "text-violet-400",
-    bg: "bg-violet-500/10",
-    ring: "ring-violet-500/20",
   },
   {
     number: "03",
     title: "Move Into Your Nest",
     description: "Schedule viewings, finalize details, and settle into your new home with confidence.",
     icon: HomeModernIcon,
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-    ring: "ring-emerald-500/20",
   },
 ];
 
@@ -177,7 +157,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Browse by Property Type */}
+      {/* Browse by Property Type — Photo tiles */}
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center">
@@ -194,20 +174,43 @@ export default function HomePage() {
               <Link
                 key={pt.type}
                 href={`/search?propertyType=${pt.type}`}
-                className={`group relative overflow-hidden rounded-2xl border border-white/8 bg-linear-to-br ${pt.gradient} p-5 text-center transition-all duration-300 ${pt.border} hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20`}
+                className="group relative aspect-[3/4] overflow-hidden rounded-2xl"
               >
-                <div className="text-3xl">{pt.emoji}</div>
-                <p className="mt-2 text-sm font-semibold text-white">{pt.label}</p>
-                <p className="mt-0.5 text-xs text-slate-500">{pt.count} listings</p>
+                <Image
+                  src={pt.image}
+                  alt={pt.label}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-primary-600/0 transition-colors duration-300 group-hover:bg-primary-600/15" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <p className="text-sm font-bold text-white">{pt.label}</p>
+                  <p className="text-xs text-white/60">{pt.count} listings</p>
+                </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-primary-950/40" />
+      {/* How It Works — Cinematic section with blurred house background */}
+      <section className="relative py-28 overflow-hidden">
+        {/* Background image */}
+        <Image
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop&q=80"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority={false}
+        />
+        {/* Dark overlay + blur */}
+        <div className="absolute inset-0 bg-primary-950/85 backdrop-blur-sm" />
+        {/* Decorative glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-primary-500/8 blur-3xl" />
+
         <div className="relative mx-auto max-w-5xl px-6">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-widest text-primary-400">
@@ -218,27 +221,36 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
             {steps.map((step, i) => (
-              <div key={step.number} className="relative text-center">
-                {/* Connector line between steps (desktop) */}
-                {i < steps.length - 1 && (
-                  <div className="absolute top-10 left-[calc(50%+40px)] right-[calc(-50%+40px)] hidden h-px bg-linear-to-r from-white/10 to-white/5 md:block" />
-                )}
+              <div
+                key={step.number}
+                className="group relative rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md transition-all duration-300 hover:border-primary-400/20 hover:bg-white/8"
+              >
+                {/* Step number */}
+                <span className="text-5xl font-black text-primary-500/20">
+                  {step.number}
+                </span>
 
-                <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-3xl ${step.bg} ring-1 ${step.ring}`}>
-                  <step.icon className={`h-8 w-8 ${step.color}`} />
+                <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500/15 ring-1 ring-primary-400/20">
+                  <step.icon className="h-6 w-6 text-primary-400" />
                 </div>
 
-                <p className={`mt-5 text-xs font-bold uppercase tracking-widest ${step.color}`}>
-                  Step {step.number}
-                </p>
-                <h3 className="mt-2 text-xl font-bold text-white">
+                <h3 className="mt-5 text-lg font-bold text-white">
                   {step.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">
                   {step.description}
                 </p>
+
+                {/* Connector arrow (desktop only) */}
+                {i < steps.length - 1 && (
+                  <div className="absolute -right-3.5 top-1/2 hidden -translate-y-1/2 text-white/20 md:block">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M1 7h12m0 0L8 2m5 5L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -261,10 +273,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden py-24">
-        <div className="absolute inset-0 bg-linear-to-r from-primary-950 via-primary-900 to-accent-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-500/15 via-transparent to-transparent" />
+      {/* CTA — with background image */}
+      <section className="relative overflow-hidden py-28">
+        <Image
+          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=800&fit=crop&q=80"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority={false}
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-primary-950/95 via-primary-900/90 to-accent-950/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-500/10 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Ready to find your next home?
