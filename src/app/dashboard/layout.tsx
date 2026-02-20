@@ -30,7 +30,7 @@ export default function DashboardLayout({
       <MobileSidebar />
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="lg:pl-64 min-h-screen overflow-y-auto">
         {children}
       </div>
     </div>

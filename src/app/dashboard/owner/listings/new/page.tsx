@@ -1085,7 +1085,7 @@ export default function NewListingPage() {
         }
       />
 
-      <div className="mx-auto max-w-3xl p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl p-6 pb-24 lg:p-8 lg:pb-24">
         <StepIndicator />
 
         {/* Form card */}
