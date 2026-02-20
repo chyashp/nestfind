@@ -77,10 +77,10 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary-400/10 bg-primary-950/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 shadow-lg shadow-primary-500/25">
               <BuildingOffice2Icon className="h-5 w-5 text-white" />
             </div>
             <span className="text-lg font-bold text-white">NestFind</span>
@@ -88,13 +88,13 @@ export default function HomePage() {
           <div className="hidden items-center gap-8 md:flex">
             <Link
               href="/search"
-              className="text-sm font-medium text-slate-400 hover:text-primary-400 transition-colors"
+              className="text-sm font-medium text-primary-200/70 hover:text-primary-300 transition-colors"
             >
               Search
             </Link>
             <Link
               href="/map"
-              className="text-sm font-medium text-slate-400 hover:text-primary-400 transition-colors"
+              className="text-sm font-medium text-primary-200/70 hover:text-primary-300 transition-colors"
             >
               Map
             </Link>
@@ -102,13 +102,13 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="text-sm font-semibold text-slate-300 hover:text-primary-400 transition-colors"
+              className="text-sm font-semibold text-primary-200 hover:text-white transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="/signup"
-              className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-primary-500/20 hover:bg-primary-500 transition-colors"
+              className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/25 hover:bg-primary-500 transition-colors"
             >
               Get Started
             </Link>
@@ -162,7 +162,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="border-y border-white/5 bg-white/[0.02] py-12">
+      <section className="border-y border-primary-400/10 bg-primary-950/30 py-12">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 sm:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
@@ -242,29 +242,29 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-slate-950 py-12">
+      <footer className="border-t border-primary-400/10 bg-primary-950 py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 shadow-md shadow-primary-500/20">
                 <BuildingOffice2Icon className="h-4 w-4 text-white" />
               </div>
               <span className="text-base font-bold text-white">
                 NestFind
               </span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-slate-500">
-              <Link href="/search" className="hover:text-primary-400 transition-colors">
+            <div className="flex items-center gap-6 text-sm text-primary-200/60">
+              <Link href="/search" className="hover:text-primary-300 transition-colors">
                 Search
               </Link>
-              <Link href="/map" className="hover:text-primary-400 transition-colors">
+              <Link href="/map" className="hover:text-primary-300 transition-colors">
                 Map
               </Link>
-              <Link href="/login" className="hover:text-primary-400 transition-colors">
+              <Link href="/login" className="hover:text-primary-300 transition-colors">
                 Sign In
               </Link>
             </div>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-primary-300/40">
               &copy; {new Date().getFullYear()} NestFind. All rights reserved.
             </p>
           </div>
