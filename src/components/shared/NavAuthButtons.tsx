@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/hooks/use-redux";
 import { clearUser } from "@/store/slices/auth";
 import { createClient } from "@/lib/supabase/client";
+import Avatar from "@/components/ui/Avatar";
 
 interface Props {
   variant?: "dark" | "light";
@@ -13,7 +14,7 @@ interface Props {
 export default function NavAuthButtons({ variant = "dark" }: Props) {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { userId, role } = useAppSelector((s) => s.auth);
+  const { userId, role, fullName, avatarUrl } = useAppSelector((s) => s.auth);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -28,6 +29,18 @@ export default function NavAuthButtons({ variant = "dark" }: Props) {
   if (userId) {
     return (
       <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <Avatar src={avatarUrl} name={fullName || "User"} size="xs" />
+          <span
+            className={
+              isDark
+                ? "text-sm font-medium text-slate-200"
+                : "text-sm font-medium text-slate-700"
+            }
+          >
+            {fullName || "User"}
+          </span>
+        </div>
         <Link
           href={dashboardPath}
           className={
