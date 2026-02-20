@@ -41,7 +41,7 @@ export default function LocationSearchBar({
 
     try {
       const res = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(text)}.json?access_token=${MAPBOX_TOKEN}&types=place,neighborhood,address,locality&country=us&limit=5`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(text)}.json?access_token=${MAPBOX_TOKEN}&types=place,neighborhood,address,locality&limit=5`
       );
       const data = await res.json();
       setSuggestions(data.features || []);

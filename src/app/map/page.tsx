@@ -10,6 +10,7 @@ import type { GeoJSON } from "geojson";
 import {
   BuildingOffice2Icon,
   MagnifyingGlassIcon,
+  MapPinIcon,
   ListBulletIcon,
   MapIcon,
 } from "@heroicons/react/24/outline";
@@ -137,7 +138,6 @@ export default function MapPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [activePropertyId, setActivePropertyId] = useState<string | null>(null);
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [mobileView, setMobileView] = useState<"map" | "list">("map");
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
@@ -297,6 +297,17 @@ export default function MapPage() {
     };
   }, [handleClusterClick]);
 
+  // ── Fly to location (from geocoding search) ───────────────────────────
+
+  const handleFlyTo = useCallback(
+    (lng: number, lat: number, zoom?: number) => {
+      const map = mapRef.current?.getMap();
+      if (!map) return;
+      map.flyTo({ center: [lng, lat], zoom: zoom ?? 12, duration: 1500 });
+    },
+    []
+  );
+
   // Clean up debounce timer
   useEffect(() => {
     return () => {
@@ -311,7 +322,7 @@ export default function MapPage() {
   if (!MAPBOX_TOKEN) {
     return (
       <main className="flex h-screen flex-col bg-(--background)">
-        <MapNav searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <MapNav onFlyTo={handleFlyTo} />
         <div className="flex flex-1 items-center justify-center bg-slate-100">
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50">
@@ -341,7 +352,7 @@ export default function MapPage() {
   return (
     <main className="flex h-screen flex-col bg-(--background)">
       {/* Top navigation */}
-      <MapNav searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <MapNav onFlyTo={handleFlyTo} />
 
       {/* Split layout */}
       <div className="flex flex-1 overflow-hidden">
@@ -490,15 +501,120 @@ export default function MapPage() {
   );
 }
 
-// ─── Top Navigation Bar ──────────────────────────────────────────────────────
+// ─── Geocoding suggestion type ───────────────────────────────────────────────
 
-function MapNav({
-  searchQuery,
-  onSearchChange,
-}: {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-}) {
+interface GeoSuggestion {
+  id: string;
+  place_name: string;
+  center: [number, number]; // [lng, lat]
+  place_type: string[];
+}
+
+// ─── Top Navigation Bar with Geocoding Search ───────────────────────────────
+
+function MapNav({ onFlyTo }: { onFlyTo: (lng: number, lat: number, zoom?: number) => void }) {
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<GeoSuggestion[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const fetchSuggestions = useCallback(async (text: string) => {
+    if (!text.trim() || !MAPBOX_TOKEN) {
+      setSuggestions([]);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(text)}.json?access_token=${MAPBOX_TOKEN}&types=place,neighborhood,address,locality,region&limit=5`
+      );
+      const data = await res.json();
+      setSuggestions(data.features || []);
+      setIsOpen(true);
+      setActiveIndex(-1);
+    } catch {
+      setSuggestions([]);
+    }
+  }, []);
+
+  const handleInputChange = (value: string) => {
+    setQuery(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => fetchSuggestions(value), 300);
+  };
+
+  const handleSelect = (suggestion: GeoSuggestion) => {
+    setQuery(suggestion.place_name);
+    setIsOpen(false);
+    setSuggestions([]);
+    const zoom = suggestion.place_type.includes("address") ? 15 : 12;
+    onFlyTo(suggestion.center[0], suggestion.center[1], zoom);
+  };
+
+  const handleSubmit = () => {
+    if (!query.trim()) return;
+    // If there are suggestions, pick the first one
+    if (suggestions.length > 0) {
+      handleSelect(suggestions[0]);
+    } else {
+      // Trigger a fetch and pick the first result
+      fetchSuggestions(query).then(() => {
+        // handled by state update — user can press Enter again
+      });
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen || suggestions.length === 0) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSubmit();
+      }
+      return;
+    }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (activeIndex >= 0) {
+          handleSelect(suggestions[activeIndex]);
+        } else {
+          handleSubmit();
+        }
+        break;
+      case "Escape":
+        setIsOpen(false);
+        setActiveIndex(-1);
+        break;
+    }
+  };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Cleanup debounce
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
   return (
     <nav className="flex h-14 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4">
       <Link href="/" className="flex items-center gap-2">
@@ -509,16 +625,57 @@ function MapNav({
       </Link>
 
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5">
-          <MagnifyingGlassIcon className="h-4 w-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search location..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-32 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none sm:w-48"
-          />
+        {/* Geocoding search */}
+        <div ref={containerRef} className="relative">
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary-400 transition-colors">
+            <MagnifyingGlassIcon className="h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search city or address..."
+              value={query}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onFocus={() => suggestions.length > 0 && setIsOpen(true)}
+              className="w-40 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none sm:w-56"
+            />
+          </div>
+
+          {/* Autocomplete dropdown */}
+          {isOpen && suggestions.length > 0 && (
+            <div className="absolute left-0 right-0 top-full z-50 mt-1.5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
+              {suggestions.map((s, index) => {
+                const parts = s.place_name.split(", ");
+                const primary = parts[0];
+                const secondary = parts.slice(1).join(", ");
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => handleSelect(s)}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    className={cn(
+                      "flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors",
+                      index === activeIndex ? "bg-primary-50" : "hover:bg-slate-50"
+                    )}
+                  >
+                    <MapPinIcon
+                      className={cn(
+                        "h-4 w-4 shrink-0",
+                        index === activeIndex ? "text-primary-500" : "text-slate-400"
+                      )}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-slate-900">{primary}</p>
+                      {secondary && (
+                        <p className="truncate text-xs text-slate-400">{secondary}</p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
+
         <Link
           href="/search"
           className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
