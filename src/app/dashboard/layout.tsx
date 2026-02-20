@@ -20,7 +20,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
+    <div className="h-screen overflow-hidden bg-[var(--background)]">
       {/* Desktop sidebar */}
       <div className="hidden lg:block">
         <Sidebar />
@@ -29,8 +29,8 @@ export default function DashboardLayout({
       {/* Mobile sidebar */}
       <MobileSidebar />
 
-      {/* Main content */}
-      <div className="lg:pl-64 min-h-screen overflow-y-auto">
+      {/* Main content — scrollable */}
+      <div className="h-full overflow-y-auto lg:pl-64">
         {children}
       </div>
     </div>
