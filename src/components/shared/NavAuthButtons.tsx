@@ -29,6 +29,16 @@ export default function NavAuthButtons({ variant = "dark" }: Props) {
   if (userId) {
     return (
       <div className="flex items-center gap-3">
+        <Link
+          href={dashboardPath}
+          className={
+            isDark
+              ? "text-sm font-semibold text-slate-200 hover:text-white transition-colors"
+              : "text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors"
+          }
+        >
+          Home
+        </Link>
         <div className="flex items-center gap-2">
           <Avatar src={avatarUrl} name={fullName || "User"} size="xs" />
           <span
@@ -41,16 +51,6 @@ export default function NavAuthButtons({ variant = "dark" }: Props) {
             {fullName || "User"}
           </span>
         </div>
-        <Link
-          href={dashboardPath}
-          className={
-            isDark
-              ? "text-sm font-semibold text-slate-200 hover:text-white transition-colors"
-              : "text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors"
-          }
-        >
-          Home
-        </Link>
         <button
           onClick={handleSignOut}
           className={
