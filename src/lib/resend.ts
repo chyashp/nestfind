@@ -59,10 +59,12 @@ export async function sendEnquiryEmail({
     </div>
   `;
 
-  await resend.emails.send({
+  const result = await resend.emails.send({
     from: "NestFind <onboarding@resend.dev>",
     to: ownerEmail,
     subject: `New enquiry for "${propertyTitle}"`,
     html,
   });
+
+  return result;
 }

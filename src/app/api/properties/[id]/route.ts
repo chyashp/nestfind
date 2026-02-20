@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // GET /api/properties/[id] — Get single property
 export async function GET(
@@ -9,9 +10,10 @@ export async function GET(
   const { id } = await params;
   const supabase = await createClient();
 
+  // Fetch the property without the owner join (avoids RLS issues on profiles)
   const { data, error } = await supabase
     .from("properties")
-    .select("*, owner:profiles!properties_owner_id_fkey(user_id, full_name, avatar_url, phone, bio)")
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -21,6 +23,17 @@ export async function GET(
       { status: 404 }
     );
   }
+
+  // Fetch owner profile bypassing RLS via admin client, falling back to
+  // the regular client when the service-role key is unavailable.
+  const profileClient = createAdminClient() ?? supabase;
+  const { data: ownerProfile } = await profileClient
+    .from("profiles")
+    .select("user_id, full_name, avatar_url, phone, bio")
+    .eq("user_id", data.owner_id)
+    .single();
+
+  data.owner = ownerProfile ?? null;
 
   return NextResponse.json({ data });
 }

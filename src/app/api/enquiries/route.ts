@@ -123,29 +123,34 @@ export async function POST(request: NextRequest) {
 
   // Send email notification to owner (best-effort, non-blocking)
   try {
+    const ownerArr = property.owner as unknown as { full_name: string }[] | null;
+    const ownerProfile = ownerArr?.[0] ?? null;
+
+    // Try admin client first to get owner email, fall back to user.email lookup
+    let ownerEmail: string | undefined;
     const admin = createAdminClient();
     if (admin) {
       const { data: ownerAuth } = await admin.auth.admin.getUserById(property.owner_id);
-      const ownerEmail = ownerAuth?.user?.email;
-      const ownerArr = property.owner as unknown as { full_name: string }[] | null;
-      const ownerProfile = ownerArr?.[0] ?? null;
-
-      if (ownerEmail) {
-        await sendEnquiryEmail({
-          ownerName: ownerProfile?.full_name || "Property Owner",
-          ownerEmail,
-          senderName: senderProfile?.full_name || "A buyer",
-          senderPhone: body.phone || null,
-          preferredDate: body.preferred_date || null,
-          message: body.message,
-          propertyTitle: property.title,
-          propertyId: body.property_id,
-        });
-      }
+      ownerEmail = ownerAuth?.user?.email;
     }
-  } catch {
-    // Email is best-effort — don't fail the enquiry if email fails
-    console.error("Failed to send enquiry email notification");
+
+    if (ownerEmail) {
+      const result = await sendEnquiryEmail({
+        ownerName: ownerProfile?.full_name || "Property Owner",
+        ownerEmail,
+        senderName: senderProfile?.full_name || "A buyer",
+        senderPhone: body.phone || null,
+        preferredDate: body.preferred_date || null,
+        message: body.message,
+        propertyTitle: property.title,
+        propertyId: body.property_id,
+      });
+      console.log("Enquiry email sent to:", ownerEmail, result);
+    } else {
+      console.warn("Could not resolve owner email — SUPABASE_SERVICE_ROLE_KEY may be missing");
+    }
+  } catch (err) {
+    console.error("Failed to send enquiry email:", err);
   }
 
   return NextResponse.json({ data }, { status: 201 });
