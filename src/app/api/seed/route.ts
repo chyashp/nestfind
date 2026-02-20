@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // Real Unsplash photos grouped by property type
 const HOUSE_IMAGES = [
@@ -444,6 +445,9 @@ const OTTAWA_PROPERTIES = [
   },
 ];
 
+// Number of properties to assign to the logged-in user
+const MY_LISTINGS_COUNT = 5;
+
 export async function POST() {
   const supabase = await createClient();
 
@@ -473,8 +477,37 @@ export async function POST() {
   // Reset counters for each seed run
   for (const key of Object.keys(typeCounters)) delete typeCounters[key];
 
-  const rows = OTTAWA_PROPERTIES.map((p) => ({
-    owner_id: user.id,
+  const admin = createAdminClient();
+
+  // If we have the service role key, create a demo owner for most listings
+  let demoOwnerId: string | null = null;
+  if (admin) {
+    const DEMO_EMAIL = "demo-owner@nestfind.app";
+    // Check if demo owner already exists
+    const { data: existingUsers } = await admin.auth.admin.listUsers();
+    const existing = existingUsers?.users?.find((u) => u.email === DEMO_EMAIL);
+
+    if (existing) {
+      demoOwnerId = existing.id;
+    } else {
+      const { data: newUser, error: createErr } = await admin.auth.admin.createUser({
+        email: DEMO_EMAIL,
+        password: "demo-owner-nestfind-2025",
+        email_confirm: true,
+        user_metadata: { role: "owner", full_name: "Ottawa Realty Group" },
+      });
+      if (!createErr && newUser?.user) {
+        demoOwnerId = newUser.user.id;
+      }
+    }
+  }
+
+  // Split properties: first few go to logged-in user, rest to demo owner
+  const myProperties = OTTAWA_PROPERTIES.slice(0, MY_LISTINGS_COUNT);
+  const otherProperties = OTTAWA_PROPERTIES.slice(MY_LISTINGS_COUNT);
+
+  const buildRow = (p: (typeof OTTAWA_PROPERTIES)[0], ownerId: string) => ({
+    owner_id: ownerId,
     title: p.title,
     description: p.description,
     property_type: p.property_type,
@@ -496,19 +529,43 @@ export async function POST() {
     parking_spaces: p.parking_spaces,
     amenities: p.amenities,
     images: getNextImages(p.property_type),
-  }));
+  });
 
-  const { data, error } = await supabase
+  // Insert current user's properties via normal client (respects RLS)
+  const myRows = myProperties.map((p) => buildRow(p, user.id));
+  const { data: myData, error: myError } = await supabase
     .from("properties")
-    .insert(rows)
+    .insert(myRows)
     .select("id, title");
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (myError) {
+    return NextResponse.json({ error: myError.message }, { status: 500 });
+  }
+
+  let otherCount = 0;
+  // Insert remaining properties under demo owner (via admin client to bypass RLS)
+  if (admin && demoOwnerId) {
+    const otherRows = otherProperties.map((p) => buildRow(p, demoOwnerId));
+    const { data: otherData, error: otherError } = await admin
+      .from("properties")
+      .insert(otherRows)
+      .select("id");
+
+    if (!otherError && otherData) {
+      otherCount = otherData.length;
+    }
+  } else {
+    // Fallback: no service role key — assign all to current user
+    const fallbackRows = otherProperties.map((p) => buildRow(p, user.id));
+    const { data: fallbackData } = await supabase
+      .from("properties")
+      .insert(fallbackRows)
+      .select("id");
+    otherCount = fallbackData?.length ?? 0;
   }
 
   return NextResponse.json({
-    message: `Seeded ${data.length} properties in Ottawa`,
-    data,
+    message: `Seeded ${(myData?.length ?? 0) + otherCount} properties in Ottawa (${myData?.length ?? 0} yours, ${otherCount} from other owners)`,
+    data: myData,
   });
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   HomeIcon,
   BuildingOffice2Icon,
@@ -16,8 +16,10 @@ import {
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
-import { useAppSelector } from "@/hooks/use-redux";
+import { useAppSelector, useAppDispatch } from "@/hooks/use-redux";
 import { useTheme } from "@/hooks/use-theme";
+import { clearUser } from "@/store/slices/auth";
+import { createClient } from "@/lib/supabase/client";
 import Avatar from "@/components/ui/Avatar";
 import type { UserRole } from "@/types/database";
 
@@ -64,9 +66,18 @@ function getNavItems(role: UserRole | null): NavItem[] {
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const { theme, toggleTheme } = useTheme();
   const { role, fullName, avatarUrl, email } = useAppSelector((s) => s.auth);
   const navItems = getNavItems(role);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    dispatch(clearUser());
+    router.push("/login");
+  };
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-[var(--sidebar-bg)]">
@@ -129,13 +140,13 @@ export default function Sidebar() {
         </button>
 
         {/* Logout */}
-        <Link
-          href="/login"
+        <button
+          onClick={handleSignOut}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white transition-colors"
         >
           <ArrowLeftStartOnRectangleIcon className="h-5 w-5 shrink-0" />
           Sign Out
-        </Link>
+        </button>
 
         {/* User info */}
         <div className="flex items-center gap-3 rounded-xl px-3 py-2">
