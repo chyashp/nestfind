@@ -8,6 +8,7 @@ import {
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import LocationSearchBar from "@/components/shared/LocationSearchBar";
+import NavAuthButtons from "@/components/shared/NavAuthButtons";
 
 const propertyTypes = [
   {
@@ -95,20 +96,7 @@ export default function HomePage() {
               Map
             </Link>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-slate-300 hover:text-white transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/25 hover:bg-primary-500 transition-colors"
-            >
-              Get Started
-            </Link>
-          </div>
+          <NavAuthButtons variant="dark" />
         </div>
       </nav>
 

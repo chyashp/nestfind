@@ -18,6 +18,7 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import Input from "@/components/ui/Input";
 import PropertyGrid from "@/components/property/PropertyGrid";
+import NavAuthButtons from "@/components/shared/NavAuthButtons";
 import {
   PROPERTY_TYPES,
   LISTING_TYPES,
@@ -278,12 +279,7 @@ function SearchPageInner() {
               <MapIcon className="h-4 w-4" />
               Map View
             </Link>
-            <Link
-              href="/login"
-              className="rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-700"
-            >
-              Sign In
-            </Link>
+            <NavAuthButtons variant="light" />
           </div>
         </div>
       </nav>
