@@ -332,13 +332,14 @@ export default function NewListingPage() {
         amenities: formData.amenities,
       };
 
-      const property = await api.post<Property>("/api/properties", body);
+      const res = await api.post<{ data: Property }>("/api/properties", body);
+      const property = res.data;
 
       // Upload images if any
       if (images.length > 0) {
         const fd = new FormData();
         images.forEach((img) => {
-          fd.append("images", img.file);
+          fd.append("files", img.file);
         });
         await api.upload(`/api/properties/${property.id}/images`, fd);
       }
