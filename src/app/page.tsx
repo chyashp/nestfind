@@ -73,7 +73,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary-400/10 bg-primary-950/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary-400/10 bg-slate-900/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 shadow-lg shadow-primary-500/25">
@@ -84,13 +84,13 @@ export default function HomePage() {
           <div className="hidden items-center gap-8 md:flex">
             <Link
               href="/search"
-              className="text-sm font-medium text-primary-200/70 hover:text-primary-300 transition-colors"
+              className="text-sm font-medium text-slate-400 hover:text-primary-400 transition-colors"
             >
               Search
             </Link>
             <Link
               href="/map"
-              className="text-sm font-medium text-primary-200/70 hover:text-primary-300 transition-colors"
+              className="text-sm font-medium text-slate-400 hover:text-primary-400 transition-colors"
             >
               Map
             </Link>
@@ -98,7 +98,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="text-sm font-semibold text-primary-200 hover:text-white transition-colors"
+              className="text-sm font-semibold text-slate-300 hover:text-white transition-colors"
             >
               Sign In
             </Link>
@@ -124,14 +124,15 @@ export default function HomePage() {
           priority
         />
         {/* Overlays for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-950/90 via-slate-950/85 to-slate-950" />
-        <div className="absolute inset-0 bg-primary-950/40" />
-        {/* Decorative glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950" />
+        <div className="absolute inset-0 bg-slate-900/30" />
+        {/* Warm decorative glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-primary-600/8 blur-3xl" />
+        <div className="absolute top-20 right-0 h-[400px] w-[400px] rounded-full bg-accent-500/6 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-sm font-medium text-primary-400 ring-1 ring-white/10 backdrop-blur-sm">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary-500/10 px-4 py-1.5 text-sm font-medium text-primary-400 ring-1 ring-primary-500/20 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-primary-400" />
               Find your dream property today
             </div>
@@ -165,52 +166,6 @@ export default function HomePage() {
                 )
               )}
             </div>
-          </div>
-
-          {/* Floating property preview cards */}
-          <div className="mt-14 flex justify-center gap-4 overflow-hidden">
-            {[
-              {
-                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=280&h=180&fit=crop&q=80",
-                price: "$425,000",
-                location: "Austin, TX",
-                beds: "3 bed",
-              },
-              {
-                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=280&h=180&fit=crop&q=80",
-                price: "$2,800/mo",
-                location: "San Francisco, CA",
-                beds: "2 bed",
-              },
-              {
-                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=280&h=180&fit=crop&q=80",
-                price: "$1,250,000",
-                location: "Miami, FL",
-                beds: "5 bed",
-              },
-            ].map((card) => (
-              <Link
-                key={card.location}
-                href="/search"
-                className="group hidden w-56 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 hover:border-primary-400/20 hover:bg-white/8 sm:block"
-              >
-                <div className="relative h-28 overflow-hidden">
-                  <Image
-                    src={card.image}
-                    alt={card.location}
-                    fill
-                    sizes="224px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div className="p-3">
-                  <p className="text-sm font-bold text-white">{card.price}</p>
-                  <p className="text-xs text-slate-400">
-                    {card.beds} &middot; {card.location}
-                  </p>
-                </div>
-              </Link>
-            ))}
           </div>
         </div>
       </section>
@@ -265,9 +220,9 @@ export default function HomePage() {
           priority={false}
         />
         {/* Dark overlay + blur */}
-        <div className="absolute inset-0 bg-primary-950/85 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-sm" />
         {/* Decorative glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-primary-500/8 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-primary-500/6 blur-3xl" />
 
         <div className="relative mx-auto max-w-5xl px-6">
           <div className="text-center">
@@ -316,7 +271,7 @@ export default function HomePage() {
       </section>
 
       {/* Trust signals */}
-      <section className="border-y border-primary-400/10 bg-primary-950/30 py-10">
+      <section className="border-y border-primary-400/10 bg-slate-900/40 py-10">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-6">
           {[
             { icon: MapPinIcon, text: "50+ cities covered" },
@@ -341,19 +296,19 @@ export default function HomePage() {
           className="object-cover"
           priority={false}
         />
-        <div className="absolute inset-0 bg-linear-to-r from-primary-950/95 via-primary-900/90 to-accent-950/95" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-500/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-slate-950/95 via-slate-900/90 to-slate-950/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-500/10 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Ready to find your next home?
           </h2>
-          <p className="mt-4 text-lg text-primary-200/70">
+          <p className="mt-4 text-lg text-slate-400">
             Join thousands of buyers and owners on NestFind.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/search"
-              className="rounded-full bg-white px-8 py-3.5 text-base font-semibold text-primary-900 shadow-lg hover:bg-primary-50 transition-colors"
+              className="rounded-full bg-primary-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-primary-500/20 hover:bg-primary-400 transition-colors"
             >
               Browse Properties
             </Link>
@@ -368,7 +323,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-primary-400/10 bg-primary-950 py-12">
+      <footer className="border-t border-primary-400/10 bg-slate-900 py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2.5">
@@ -379,18 +334,18 @@ export default function HomePage() {
                 NestFind
               </span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-primary-200/60">
-              <Link href="/search" className="hover:text-primary-300 transition-colors">
+            <div className="flex items-center gap-6 text-sm text-slate-400">
+              <Link href="/search" className="hover:text-primary-400 transition-colors">
                 Search
               </Link>
-              <Link href="/map" className="hover:text-primary-300 transition-colors">
+              <Link href="/map" className="hover:text-primary-400 transition-colors">
                 Map
               </Link>
-              <Link href="/login" className="hover:text-primary-300 transition-colors">
+              <Link href="/login" className="hover:text-primary-400 transition-colors">
                 Sign In
               </Link>
             </div>
-            <p className="text-sm text-primary-300/40">
+            <p className="text-sm text-slate-500">
               &copy; {new Date().getFullYear()} NestFind. All rights reserved.
             </p>
           </div>
