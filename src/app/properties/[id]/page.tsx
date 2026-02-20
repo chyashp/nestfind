@@ -277,9 +277,9 @@ export default function PropertyDetailPage() {
     if (!id) return;
     setLoading(true);
     api
-      .get<Property>("/api/properties/" + id)
-      .then((data) => {
-        setProperty(data);
+      .get<{ data: Property }>("/api/properties/" + id)
+      .then((res) => {
+        setProperty(res.data);
         setError(null);
       })
       .catch((err) => {
